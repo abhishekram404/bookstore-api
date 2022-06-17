@@ -1,9 +1,9 @@
 const User = require("../models/User");
 const errorHandler = require("../utils/errorHandler");
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 // fetch all users
 exports.getAllUsers = async (req, res) => {
-  // res.send("User route");
   try {
     const users = await User.find({});
     return res.status(200).send({
@@ -14,17 +14,11 @@ exports.getAllUsers = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).send({
-      success: false,
-      message: "Something went wrong",
-      data: null,
-    });
+    errorHandler({ error, res });
   }
 };
 
 exports.getUser = async (req, res) => {
-  console.log(typeof req.params.userId);
   try {
     const user = await User.find({
       _id: mongoose.Types.ObjectId(req.params.userId.toString()),
@@ -44,12 +38,7 @@ exports.getUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).send({
-      success: false,
-      message: "Something went wrong on the server side.",
-      data: null,
-    });
+    errorHandler({ error, res });
   }
 };
 
@@ -76,12 +65,7 @@ exports.register = async (req, res) => {
       data: null,
     });
   } catch (error) {
-    console.log(error.message);
-    return res.status(500).send({
-      success: false,
-      message: "Something went wrong while creating new user.",
-      data: null,
-    });
+    errorHandler({ error, res });
   }
 };
 
@@ -90,8 +74,33 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = await req.body;
 
-    console.log(email, password);
-    return res.send(req.body);
+    const foundUser = await User.findOne({ email }).select(
+      "email password role"
+    );
+    if (!foundUser) {
+      return res
+        .status(400)
+        .send({ success: false, message: "User does not exist.", data: null });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      foundUser.password
+    );
+
+    if (!isPasswordCorrect) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Wrong password.", data: null });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Login successful",
+      data: {
+        token: foundUser.generateToken(),
+      },
+    });
   } catch (error) {
     errorHandler({ error, res });
   }
