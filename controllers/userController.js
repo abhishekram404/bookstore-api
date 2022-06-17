@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const errorHandler = require("../utils/errorHandler");
+const bcrypt = require("bcrypt");
 // fetch all users
 exports.getAllUsers = async (req, res) => {
   // res.send("User route");
@@ -58,10 +59,12 @@ exports.register = async (req, res) => {
     const { fullName, username, password, email, phone, address } =
       await req.body;
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     let newUser = await User.create({
       fullName,
       username,
-      password,
+      password: hashedPassword,
       email,
       phone,
       address,
