@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const errorHandler = require("../utils/errorHandler");
 // fetch all users
 exports.getAllUsers = async (req, res) => {
   // res.send("User route");
@@ -79,5 +79,17 @@ exports.register = async (req, res) => {
       message: "Something went wrong while creating new user.",
       data: null,
     });
+  }
+};
+
+// login
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = await req.body;
+
+    console.log(email, password);
+    return res.send(req.body);
+  } catch (error) {
+    errorHandler({ error, res });
   }
 };
