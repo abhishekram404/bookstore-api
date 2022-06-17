@@ -1,7 +1,7 @@
 {
-  "name": "bookstore-api",
+  "name": "book-rental-system-api",
   "version": "1.0.0",
-  "description": "REST API built for the bookstore project",
+  "description": "REST API built for the book-rental-system",
   "main": "server.js",
   "author": "Keshav Kishor Ram",
   "license": "MIT",
