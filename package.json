@@ -1,0 +1,11 @@
+{
+  "name": "bookstore-api",
+  "version": "1.0.0",
+  "description": "REST API built for the bookstore project",
+  "main": "server.js",
+  "author": "Keshav Kishor Ram",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
