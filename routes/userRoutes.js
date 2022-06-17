@@ -14,12 +14,12 @@ router.get("/", async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error.message);
     return res.status(500).send({
       success: false,
       message: "Something went wrong",
       data: null,
     });
-    console.log(error.message);
   }
 });
 
@@ -67,10 +67,7 @@ router.post("/", async (req, res) => {
       phone,
       address,
     });
-    newUser = newUser.toObject();
-    delete newUser.password;
 
-    delete newUser.password;
     return res.status(200).send({
       success: true,
       message: "User created",
