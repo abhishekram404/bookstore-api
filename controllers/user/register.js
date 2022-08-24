@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
         data: null,
       });
     }
-    const { fullName, username, password, email, phone } = await value;
+    const { fullName, username, password, email, phone, dob } = await value;
 
     const emailAlreadyExists = await User.exists({ email: email.trim() });
     if (emailAlreadyExists) {
@@ -49,6 +49,7 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       email,
       phone,
+      dob: new Date(dob),
       otp: generateOTP(),
     });
 

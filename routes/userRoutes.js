@@ -6,8 +6,6 @@ const { login } = require("../controllers/user/login");
 const { verify } = require("../controllers/user/verify");
 const { resendOTP } = require("../controllers/user/resendOTP");
 
-console.log(getAllUsers);
-
 // fetch all users
 router.get("/", getAllUsers);
 

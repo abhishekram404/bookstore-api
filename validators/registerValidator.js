@@ -32,6 +32,7 @@ const registerValidator = Joi.object({
       "string.pattern.base": "Phone number is not valid.",
       "any.required": "Phone number is required.",
     }),
+  dob: Joi.string(),
 });
 
 module.exports = registerValidator;
