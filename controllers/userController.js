@@ -4,15 +4,12 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const registerValidator = require("../validators/registerValidator");
 const sendMail = require("../utils/mail");
+const generateOTP = require("../utils/generateOTP");
+
 // fetch all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    sendMail({
-      to: "ramabishek40@gmail.com",
-      text: "Hello abhishek",
-      subject: "Test email",
-    });
     return res.status(200).send({
       success: true,
       message: "All users fetched successfully",
@@ -93,15 +90,21 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       email,
       phone,
+      otp: generateOTP(),
+    });
+
+    await sendMail({
+      to: email,
+      text: `Your verification OTP is ${newUser.otp}`,
+      subject: "Email verification",
     });
 
     return res.status(200).send({
       success: true,
-      message: "User created",
+      message: "Registration successful. Please check your email for OTP.",
       data: null,
     });
   } catch (error) {
-    console.log(error);
     errorHandler({ error, res });
   }
 };
@@ -138,6 +141,57 @@ exports.login = async (req, res) => {
         token: foundUser.generateToken(),
       },
     });
+  } catch (error) {
+    errorHandler({ error, res });
+  }
+};
+
+// verify email
+exports.verify = async (req, res) => {
+  try {
+    const { otp, email } = await req.body;
+
+    if (!email || !otp) {
+      return res.status(400).send({
+        success: false,
+        message: "Email and OTP both must be included.",
+        data: null,
+      });
+    }
+    const foundUser = await User.findOne({ email: email.trim() });
+
+    if (!foundUser) {
+      return res.status(400).send({
+        success: false,
+        message: "No user having the provided email was found.",
+        data: null,
+      });
+    }
+
+    if (foundUser.otp === otp) {
+      foundUser.emailVerified = true;
+      foundUser.otp = undefined;
+      foundUser.save();
+      return res.status(200).send({
+        success: true,
+        message: "Email verification successful.",
+        data: null,
+      });
+    }
+
+    return res.status(400).send({
+      success: false,
+      message: "OTP is not correct.",
+      data: null,
+    });
+  } catch (error) {
+    errorHandler({ error, res });
+  }
+};
+
+exports.resendOTP = async (req, res) => {
+  try {
+    const { email } = await req.body;
   } catch (error) {
     errorHandler({ error, res });
   }

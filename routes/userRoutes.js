@@ -13,4 +13,7 @@ router.post("/register", userController.register);
 // login user
 router.post("/login", userController.login);
 
+// verify email
+router.post("/verify", userController.verify);
+
 module.exports = router;

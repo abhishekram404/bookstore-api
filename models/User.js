@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const generateOTP = require("../utils/generateOTP");
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -46,6 +47,9 @@ const userSchema = new mongoose.Schema({
   },
   passwordResetRequested: { type: Boolean, default: false },
   emailVerified: { type: Boolean, default: false },
+  otp: {
+    type: Number,
+  },
   books: [],
   rentedBooks: [],
   wishlist: [],
@@ -61,6 +65,8 @@ userSchema.methods.generateToken = function () {
     process.env.JWT_SECRET
   );
 };
+
+userSchema.methods.generateOTP = generateOTP;
 
 const User = mongoose.model("User", userSchema);
 

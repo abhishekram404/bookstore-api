@@ -4,15 +4,15 @@ const port = process.env.PORT || 4000;
 const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
 const dotenv = require("dotenv");
+app.use(express.json());
 
 dotenv.config();
-
 require("./db");
-app.use(express.json());
+
 app.get("/", (req, res) => res.send("Server is up and running"));
 
-app.use("/book", bookRoutes);
 app.use("/user", userRoutes);
+app.use("/book", bookRoutes);
 
 app.listen(port, (err) => {
   if (err) throw err;
