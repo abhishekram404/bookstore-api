@@ -115,7 +115,7 @@ exports.login = async (req, res) => {
     const { email, password } = await req.body;
 
     const foundUser = await User.findOne({ email }).select(
-      "email password role"
+      "email password role emailVerified otp"
     );
     if (!foundUser) {
       return res
@@ -132,6 +132,22 @@ exports.login = async (req, res) => {
       return res
         .status(400)
         .send({ success: false, message: "Wrong password.", data: null });
+    }
+
+    if (!foundUser.emailVerified) {
+      foundUser.generateOTP();
+      foundUser.save();
+      await sendMail({
+        to: email,
+        text: `Your verification OTP is ${foundUser.otp}`,
+        subject: "Email verification",
+      });
+      return res.status(400).send({
+        success: false,
+        message:
+          "Please verify your email first. We sent you an OTP in your email.",
+        data: null,
+      });
     }
 
     return res.status(200).send({
