@@ -3,10 +3,16 @@ const errorHandler = require("../utils/errorHandler");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const registerValidator = require("../validators/registerValidator");
+const sendMail = require("../utils/mail");
 // fetch all users
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
+    sendMail({
+      to: "ramabishek40@gmail.com",
+      text: "Hello abhishek",
+      subject: "Test email",
+    });
     return res.status(200).send({
       success: true,
       message: "All users fetched successfully",
