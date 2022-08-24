@@ -2,6 +2,7 @@ const User = require("../models/User");
 const errorHandler = require("../utils/errorHandler");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const registerValidator = require("../validators/registerValidator");
 // fetch all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -46,7 +47,17 @@ exports.getUser = async (req, res) => {
 exports.register = async (req, res) => {
   try {
     console.log(req.body);
-    const { fullName, username, password, email, phone } = await req.body;
+
+    const { error, value } = registerValidator.validate(req.body);
+
+    if (error) {
+      return res.status(400).send({
+        success: false,
+        message: error.details[0].message,
+        data: null,
+      });
+    }
+    const { fullName, username, password, email, phone } = await value;
 
     const emailAlreadyExists = await User.exists({ email: email.trim() });
     if (emailAlreadyExists) {
