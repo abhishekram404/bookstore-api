@@ -16,4 +16,7 @@ router.post("/login", userController.login);
 // verify email
 router.post("/verify", userController.verify);
 
+// resend otp
+router.get("/resend-verification-otp/:email", userController.resendOTP);
+
 module.exports = router;

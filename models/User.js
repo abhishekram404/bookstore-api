@@ -66,7 +66,10 @@ userSchema.methods.generateToken = function () {
   );
 };
 
-userSchema.methods.generateOTP = generateOTP;
+userSchema.methods.generateOTP = function () {
+  this.otp = generateOTP();
+  return this.otp;
+};
 
 const User = mongoose.model("User", userSchema);
 
