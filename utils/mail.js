@@ -1,17 +1,17 @@
 const nodemailer = require("nodemailer");
 
-const sendMail = async ({ to, text, subject }) => {
-  var transport = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: process.env.MAILTRAP_USER,
-      pass: process.env.MAILTRAP_PASS,
-    },
-  });
+var transport = nodemailer.createTransport({
+  service: "gmail",
+  host: "smtp.gmail.com",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS,
+  },
+});
 
+const sendMail = async ({ to, text, subject }) => {
   const message = {
-    from: "admin@readersbuffet.com",
+    from: process.env.GMAIL_USER,
     to,
     subject: subject || "Reader's Buffet",
     text: text || "Hello from Reader's buffet :D ",
@@ -25,12 +25,3 @@ const sendMail = async ({ to, text, subject }) => {
 };
 
 module.exports = sendMail;
-
-//   var transport = nodemailer.createTransport({
-//     host: "send.smtp.mailtrap.io",
-//     port: 2525,
-//     auth: {
-//       user: process.env.MAILTRAP_USER,
-//       pass: process.env.MAILTRAP_PASS,
-//     },
-//   });
