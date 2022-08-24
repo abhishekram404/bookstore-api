@@ -6,7 +6,8 @@
   "author": "Keshav Kishor Ram",
   "license": "MIT",
   "scripts": {
-    "start": "npm start"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

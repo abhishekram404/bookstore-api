@@ -41,6 +41,9 @@ const userSchema = new mongoose.Schema({
   address: {
     type: String,
   },
+  dob: {
+    type: Date,
+  },
   passwordResetRequested: { type: Boolean, default: false },
   emailVerified: { type: Boolean, default: false },
   books: [],

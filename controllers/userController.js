@@ -45,8 +45,28 @@ exports.getUser = async (req, res) => {
 // register
 exports.register = async (req, res) => {
   try {
-    const { fullName, username, password, email, phone, address } =
-      await req.body;
+    console.log(req.body);
+    const { fullName, username, password, email, phone } = await req.body;
+
+    const emailAlreadyExists = await User.exists({ email: email.trim() });
+    if (emailAlreadyExists) {
+      return res.status(400).send({
+        success: false,
+        message: "Email is already registered.",
+        data: null,
+      });
+    }
+
+    const usernameNotAvailable = await User.exists({
+      username: username.trim(),
+    });
+    if (usernameNotAvailable) {
+      return res.status(400).send({
+        success: false,
+        message: "Username is already taken.",
+        data: null,
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -56,7 +76,6 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       email,
       phone,
-      address,
     });
 
     return res.status(200).send({
@@ -65,6 +84,7 @@ exports.register = async (req, res) => {
       data: null,
     });
   } catch (error) {
+    console.log(error);
     errorHandler({ error, res });
   }
 };
