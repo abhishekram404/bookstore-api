@@ -31,7 +31,7 @@ exports.login = async (req, res) => {
     if (!foundUser.emailVerified) {
       foundUser.generateOTP();
       foundUser.save();
-      await sendMail({
+      sendMail({
         to: email,
         text: `Your verification OTP is ${foundUser.otp}`,
         subject: "Email verification",

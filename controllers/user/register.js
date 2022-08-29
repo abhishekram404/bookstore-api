@@ -53,7 +53,7 @@ exports.register = async (req, res) => {
       otp: generateOTP(),
     });
 
-    await sendMail({
+    sendMail({
       to: email,
       text: `Your verification OTP is ${newUser.otp}`,
       subject: "Email verification",
