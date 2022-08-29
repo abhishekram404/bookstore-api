@@ -1,6 +1,7 @@
-const { Schema } = require("mongoose");
+const mongoose = require("mongoose");
 const Genre = require("./Genre");
-const bookSchema = new Schema({
+const { Schema } = mongoose;
+const bookSchema = new mongoose.Schema({
   title: {
     type: String,
   },
@@ -23,7 +24,11 @@ const bookSchema = new Schema({
     type: Date,
   },
   genre: {
-    type: [Genre],
+    type: [
+      {
+        type: Genre.schema,
+      },
+    ],
   },
   owner: {
     type: Schema.Types.ObjectId,
@@ -41,4 +46,4 @@ const bookSchema = new Schema({
   ],
 });
 
-export default mongoose.model("Book", bookSchema);
+module.exports = mongoose.model("Book", bookSchema);

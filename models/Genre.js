@@ -1,6 +1,6 @@
-const { Schema } = require("mongoose");
+const mongoose = require("mongoose");
 
-const genreSchema = new Schema({
+const genreSchema = new mongoose.Schema({
   name: {
     type: String,
     maxLength: 100,
@@ -9,7 +9,12 @@ const genreSchema = new Schema({
     type: String,
     maxLength: 100,
   },
-  books: [],
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
 });
 
 genreSchema.pre("save", function (next) {
