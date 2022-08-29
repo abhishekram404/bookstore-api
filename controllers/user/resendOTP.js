@@ -23,6 +23,14 @@ exports.resendOTP = async (req, res) => {
       });
     }
 
+    if (foundUser.emailVerified) {
+      return res.status(400).send({
+        success: false,
+        message: "Email is already verified.",
+        data: null,
+      });
+    }
+
     foundUser.generateOTP();
     foundUser.save();
 

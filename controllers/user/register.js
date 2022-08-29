@@ -62,7 +62,9 @@ exports.register = async (req, res) => {
     return res.status(200).send({
       success: true,
       message: "Registration successful. Please check your email for OTP.",
-      data: null,
+      data: {
+        email: newUser.email,
+      },
     });
   } catch (error) {
     errorHandler({ error, res });

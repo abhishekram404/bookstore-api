@@ -23,7 +23,7 @@ exports.verify = async (req, res) => {
       });
     }
 
-    if (foundUser.otp === otp) {
+    if (foundUser.otp === +otp) {
       foundUser.emailVerified = true;
       foundUser.otp = undefined;
       foundUser.save();
