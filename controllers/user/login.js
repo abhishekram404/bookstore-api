@@ -6,11 +6,11 @@ const sendMail = require("../../utils/mail");
 // login
 exports.login = async (req, res) => {
   try {
-    const { email, password } = await req.body;
+    const { user, password } = await req.body;
 
-    const foundUser = await User.findOne({ email }).select(
-      "email password role emailVerified otp"
-    );
+    let foundUser = await User.findOne({
+      $or: [{ username: user }, { email: user }],
+    }).select("email password role emailVerified otp");
     if (!foundUser) {
       return res
         .status(400)
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
       foundUser.generateOTP();
       foundUser.save();
       sendMail({
-        to: email,
+        to: foundUser.email,
         text: `Your verification OTP is ${foundUser.otp}`,
         subject: "Email verification",
       });
