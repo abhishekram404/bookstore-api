@@ -5,9 +5,14 @@ const { register } = require("../controllers/user/register");
 const { login } = require("../controllers/user/login");
 const { verify } = require("../controllers/user/verify");
 const { resendOTP } = require("../controllers/user/resendOTP");
+const { checkAuth } = require("../middlewares/checkAuth");
+const { getCurrentUser } = require("../controllers/user/getCurrentUser");
 
 // fetch all users
 router.get("/", getAllUsers);
+
+// fetch current user data
+router.get("/current-user", checkAuth, getCurrentUser);
 
 // fetch user by id
 router.get("/:userId", getUser);
