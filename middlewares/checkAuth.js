@@ -22,6 +22,13 @@ exports.checkAuth = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).send({
+        success: false,
+        message: "Session expired! Please login again.",
+        data: null,
+      });
+    }
     errorHandler({ error, res });
   }
 };
