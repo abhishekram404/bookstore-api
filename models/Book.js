@@ -14,22 +14,14 @@ const bookSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  rating: {
-    type: Number,
-  },
+  rating: [{ userId: Schema.Types.ObjectId, rating: Number }],
   author: {
     type: String,
   },
   publishedDate: {
     type: Date,
   },
-  genre: {
-    type: [
-      {
-        type: Genre.schema,
-      },
-    ],
-  },
+  genre: [{ type: Schema.Types.ObjectId, ref: "Genre" }],
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -40,7 +32,7 @@ const bookSchema = new mongoose.Schema({
   },
   wishlistUsers: [
     {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: "User",
     },
   ],
