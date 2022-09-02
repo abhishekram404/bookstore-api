@@ -1,5 +1,6 @@
 const errorHandler = require("../../utils/errorHandler");
 const Book = require("../../models/Book");
+const User = require("../../models/User");
 
 exports.addBook = async (req, res) => {
   try {
@@ -13,16 +14,25 @@ exports.addBook = async (req, res) => {
       publishedDate,
       genre,
     } = req.body;
+
+    console.log(req.file);
+
+    // const { cover } = req.file;
     const book = await Book.create({
       title,
       author,
       description,
-      //   cover,
+      cover: req.file ? `/${req.file.path}` : null,
       price,
       genre,
       publishedDate,
       owner: user._id,
     });
+
+    await User.findByIdAndUpdate(user._id, {
+      $push: { books: book._id },
+    });
+
     return res.status(201).send({
       success: true,
       message: "Book added successfully",
