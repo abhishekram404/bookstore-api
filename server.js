@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 4000;
 const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
+const genreRoutes = require("./routes/genreRoutes");
 const dotenv = require("dotenv");
 
 const cors = require("cors");
@@ -16,6 +17,7 @@ app.get("/", (req, res) => res.send("Server is up and running"));
 
 app.use("/user", userRoutes);
 app.use("/book", bookRoutes);
+app.use("/genre", genreRoutes);
 
 app.listen(port, (err) => {
   if (err) throw err;
