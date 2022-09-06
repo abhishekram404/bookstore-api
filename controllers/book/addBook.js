@@ -13,11 +13,12 @@ exports.addBook = async (req, res) => {
       publishedDate,
       genre,
     } = req.body;
+    const { cover } = req.file;
     const book = await Book.create({
       title,
       author,
       description,
-      //   cover,
+      cover,
       price,
       genre,
       publishedDate,
