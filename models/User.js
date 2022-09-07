@@ -51,13 +51,19 @@ const userSchema = new mongoose.Schema({
   otp: {
     type: Number,
   },
+  exchangeTokensNumber: {
+    type: Number,
+    default: () => {
+      return this.books.length - this.heldBooks.length;
+    },
+  },
   books: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
     },
   ],
-  rentedBooks: [
+  heldBooks: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
