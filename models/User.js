@@ -51,12 +51,7 @@ const userSchema = new mongoose.Schema({
   otp: {
     type: Number,
   },
-  exchangeTokensNumber: {
-    type: Number,
-    default: () => {
-      return this.books.length - this.heldBooks.length;
-    },
-  },
+
   books: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -77,6 +72,13 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
+
+userSchema.virtual("exchangeTokenCount").get(function () {
+  return this.books.length - this.heldBooks.length;
+});
+
 userSchema.methods.generateToken = function () {
   return jwt.sign(
     {
@@ -92,6 +94,19 @@ userSchema.methods.generateOTP = function () {
   this.otp = generateOTP();
   return this.otp;
 };
+
+// userSchema.pre("save", function (next) {
+//   this.exchangeTokenCount = this.books.length - this.heldBooks.length;
+//   return next();
+// });
+// userSchema.pre("update", function (next) {
+//   this.exchangeTokenCount = this.books.length - this.heldBooks.length;
+//   return next();
+// });
+// userSchema.pre("updateOne", function (next) {
+//   this.exchangeTokenCount = this.books.length - this.heldBooks.length;
+//   return next();
+// });
 
 const User = mongoose.model("User", userSchema);
 
