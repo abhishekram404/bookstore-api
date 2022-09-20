@@ -7,10 +7,11 @@ const sendMail = require("../../utils/mail");
 exports.login = async (req, res) => {
   try {
     const { user, password } = await req.body;
-
+    console.log(user, password);
     let foundUser = await User.findOne({
       $or: [{ username: user }, { email: user }],
     }).select("email password role emailVerified otp");
+    console.log(foundUser);
     if (!foundUser) {
       return res
         .status(400)

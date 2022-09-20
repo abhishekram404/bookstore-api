@@ -4,6 +4,7 @@ const port = process.env.PORT || 4000;
 const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
 const genreRoutes = require("./routes/genreRoutes");
+const exchangeRoutes = require("./routes/exchangeRoutes");
 const dotenv = require("dotenv");
 const path = require("path");
 
@@ -19,6 +20,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/user", userRoutes);
 app.use("/book", bookRoutes);
 app.use("/genre", genreRoutes);
+app.use("/exchange", exchangeRoutes);
 
 app.listen(port, (err) => {
   if (err) throw err;
