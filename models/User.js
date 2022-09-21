@@ -3,74 +3,79 @@ const jwt = require("jsonwebtoken");
 const generateOTP = require("../utils/generateOTP");
 const Book = require("./Book");
 
-const userSchema = new mongoose.Schema({
-  fullName: {
-    type: String,
-    required: true,
-    maxLength: 100,
-  },
-  username: {
-    type: String,
-    required: true,
-    minLength: 3,
-    maxLength: 20,
-    unique: true,
-    index: {
-      unique: true,
+const userSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      required: true,
+      maxLength: 100,
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    index: {
+    username: {
+      type: String,
+      required: true,
+      minLength: 3,
+      maxLength: 20,
       unique: true,
+      index: {
+        unique: true,
+      },
     },
-  },
-  role: {
-    type: String,
-    enum: ["USER", "ADMIN"],
-    default: "USER",
-  },
-  phone: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  dob: {
-    type: Date,
-  },
-  passwordResetRequested: { type: Boolean, default: false },
-  emailVerified: { type: Boolean, default: false },
-  otp: {
-    type: Number,
-  },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      index: {
+        unique: true,
+      },
+    },
+    role: {
+      type: String,
+      enum: ["USER", "ADMIN"],
+      default: "USER",
+    },
+    phone: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    dob: {
+      type: Date,
+    },
+    passwordResetRequested: { type: Boolean, default: false },
+    emailVerified: { type: Boolean, default: false },
+    otp: {
+      type: Number,
+    },
 
-  books: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-  ],
-  heldBooks: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-  ],
-  wishlist: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-    },
-  ],
-});
+    books: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+      },
+    ],
+    heldBooks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+      },
+    ],
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.methods.generateToken = function () {
   return jwt.sign(
