@@ -5,6 +5,7 @@ const multer = require("multer");
 const storage = require("../utils/multerStorage");
 const { getMyBooks } = require("../controllers/book/getMyBooks");
 const { getBook } = require("../controllers/book/getBook");
+const { searchBook } = require("../controllers/book/searchBook");
 const upload = multer({ dest: "uploads/", storage });
 
 const router = require("express").Router();
@@ -13,6 +14,7 @@ router.get("/", (req, res) => {
   res.send("Book routes");
 });
 
+router.get("/search", searchBook);
 router.get("/all", getAllBooks);
 router.get("/mine", checkAuth, getMyBooks);
 router.post("/new", checkAuth, upload.single("cover"), addBook);
