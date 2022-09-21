@@ -8,6 +8,6 @@ exports.getExchangeTokenCount = async (req, res) => {
     const count = foundUser.getExchangeTokenCount();
     res.json({ count });
   } catch (err) {
-    errorHandler({ error, res });
+    errorHandler({ err, res });
   }
 };
