@@ -13,7 +13,12 @@ exports.getBook = async (req, res) => {
       });
     }
 
-    const book = await Book.findById(id);
+    const book = await Book.findById(id)
+      .populate("owner", "fullName")
+      .populate("genre", "name")
+      .populate("wishlistUsers")
+      .populate("rating");
+    console.log(book);
 
     if (!book) {
       return res.status(404).send({
