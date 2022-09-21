@@ -13,7 +13,10 @@ exports.searchBook = async (req, res) => {
     }
     const books = await Book.find({
       title: { $regex: query, $options: "i" },
-    });
+    })
+      .populate("genre", "name")
+      .populate("owner", "fullName");
+
     res.status(200).json(books);
   } catch (error) {
     errorHandler({ error, res });
