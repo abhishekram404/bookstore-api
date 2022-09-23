@@ -5,8 +5,7 @@ const errorHandler = require("../../utils/errorHandler");
 exports.getMyBooks = async (req, res) => {
   try {
     const { user } = await req;
-    const books = await Book.find({
-      $or: [{ owner: user._id }, { heldBy: user._id }],
+    const books = await Book.find({ owner: user._id 
     });
     return res.status(200).send({
       success: true,
@@ -19,3 +18,6 @@ exports.getMyBooks = async (req, res) => {
     errorHandler({ error, res });
   }
 };
+
+
+// { heldBy: user._id }
