@@ -15,8 +15,6 @@ exports.addBook = async (req, res) => {
       genre,
     } = req.body;
 
-    console.log(req.file);
-
     // const { cover } = req.file;
     const book = await Book.create({
       title,

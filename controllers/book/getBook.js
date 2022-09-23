@@ -18,7 +18,6 @@ exports.getBook = async (req, res) => {
       .populate("genre", "name")
       .populate("wishlistUsers")
       .populate("rating");
-    console.log(book);
 
     if (!book) {
       return res.status(404).send({

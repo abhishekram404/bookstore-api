@@ -8,8 +8,6 @@ const generateOTP = require("../../utils/generateOTP");
 // register
 exports.register = async (req, res) => {
   try {
-    console.log(req.body);
-
     const { error, value } = registerValidator.validate(req.body);
 
     if (error) {
