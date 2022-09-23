@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const Genre = require("./Genre");
 const { Schema } = mongoose;
 const bookSchema = new mongoose.Schema(
   {

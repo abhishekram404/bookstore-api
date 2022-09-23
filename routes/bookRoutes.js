@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
   res.send("Book routes");
 });
 
-router.get("/search", searchBook);
+router.post("/search", searchBook);
 router.get("/all", getAllBooks);
 router.get("/mine", checkAuth, getMyBooks);
 router.post("/new", checkAuth, upload.single("cover"), addBook);
