@@ -7,6 +7,22 @@ exports.releaseBook = async (req, res) => {
     const { bookId } = await req.body;
     const holder = await User.findById(req.user._id);
     const book = await Book.findById(bookId);
+    console.log(book);
+    if (!book) {
+      return res.status(400).send({
+        success: false,
+        message: "Book not found",
+        data: null,
+      });
+    }
+    if (!book.heldBy || book.heldBy.toString() !== holder._id.toString()) {
+      return res.status(400).send({
+        success: false,
+        message: "You are not holding this book",
+        data: null,
+      });
+    }
+
     await book.updateOne({
       $unset: {
         heldBy: "",
