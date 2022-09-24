@@ -4,6 +4,7 @@ const Book = require("../../models/Book");
 exports.getBook = async (req, res) => {
   try {
     const id = req.params.bookId;
+    console.log(req.user);
 
     if (!id) {
       return res.status(400).send({
@@ -33,7 +34,10 @@ exports.getBook = async (req, res) => {
       message: "Book details fetched successfully.",
       data: {
         ...book,
-        isHeldByMe: book?.heldBy?.toString() === req?.user?._id,
+        isHeldByMe:
+          book?.heldBy && req?.user?._id
+            ? book.heldBy.toString() === req.user._id.toString()
+            : false,
         isMine: book?.owner?._id?.toString() === req?.user?._id,
       },
     });
