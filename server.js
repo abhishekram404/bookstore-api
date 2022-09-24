@@ -9,6 +9,7 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 const cors = require("cors");
+const { identifyUser } = require("./middlewares/identifyUser");
 app.use(cors());
 app.use(express.json());
 
@@ -17,10 +18,10 @@ require("./db");
 
 app.get("/", (req, res) => res.send("Server is up and running"));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use("/user", userRoutes);
-app.use("/book", bookRoutes);
-app.use("/genre", genreRoutes);
-app.use("/exchange", exchangeRoutes);
+app.use("/user", identifyUser, userRoutes);
+app.use("/book", identifyUser, bookRoutes);
+app.use("/genre", identifyUser, genreRoutes);
+app.use("/exchange", identifyUser, exchangeRoutes);
 
 app.listen(port, (err) => {
   if (err) throw err;

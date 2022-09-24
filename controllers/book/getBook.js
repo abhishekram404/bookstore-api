@@ -17,7 +17,8 @@ exports.getBook = async (req, res) => {
       .populate("owner", "fullName")
       .populate("genre", "name")
       .populate("wishlistUsers")
-      .populate("rating");
+      .populate("rating")
+      .lean();
 
     if (!book) {
       return res.status(404).send({
@@ -30,7 +31,11 @@ exports.getBook = async (req, res) => {
     return res.status(200).send({
       success: true,
       message: "Book details fetched successfully.",
-      data: book,
+      data: {
+        ...book,
+        isHeldByMe: book?.heldBy?.toString() === req?.user?._id,
+        isMine: book?.owner?._id?.toString() === req?.user?._id,
+      },
     });
   } catch (error) {
     errorHandler({ error, res });

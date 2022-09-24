@@ -8,6 +8,7 @@ const { getExchangedBooks } = require("../controllers/book/getExchangedBooks");
 const { getBook } = require("../controllers/book/getBook");
 const { searchBook } = require("../controllers/book/searchBook");
 const { releaseBook } = require("../controllers/exchange/releaseBook");
+const { identifyUser } = require("../middlewares/identifyUser");
 const upload = multer({ dest: "uploads/", storage });
 
 const router = require("express").Router();
@@ -22,6 +23,6 @@ router.get("/all", getAllBooks);
 router.get("/mine", checkAuth, getMyBooks);
 router.get("/exchanged", checkAuth, getExchangedBooks);
 router.post("/new", checkAuth, upload.single("cover"), addBook);
-router.get("/:bookId", getBook);
+router.get("/:bookId", identifyUser, getBook);
 
 module.exports = router;
