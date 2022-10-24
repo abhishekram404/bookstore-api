@@ -5,6 +5,8 @@ const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
 const genreRoutes = require("./routes/genreRoutes");
 const exchangeRoutes = require("./routes/exchangeRoutes");
+const postRoutes = require("./routes/postRoutes");
+const categoriesRoutes = require("./routes/categoriesRoutes");
 const dotenv = require("dotenv");
 const path = require("path");
 
@@ -22,6 +24,9 @@ app.use("/user", identifyUser, userRoutes);
 app.use("/book", identifyUser, bookRoutes);
 app.use("/genre", identifyUser, genreRoutes);
 app.use("/exchange", identifyUser, exchangeRoutes);
+app.use("/blog", identifyUser, postRoutes);
+app.use("/category", identifyUser, categoriesRoutes);
+
 
 app.listen(port, (err) => {
   if (err) throw err;
