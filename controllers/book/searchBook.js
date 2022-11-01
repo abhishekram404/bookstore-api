@@ -1,4 +1,5 @@
 const Book = require("../../models/Book");
+const BuyBook = require("../../models/BuyBook");
 const errorHandler = require("../../utils/errorHandler");
 const { Types } = require("mongoose");
 
@@ -13,7 +14,7 @@ exports.searchBook = async (req, res) => {
         data: null,
       });
     }
-    const books = await Book.find({
+    const books = await BuyBook.find({
       title: { $regex: query, $options: "i" },
       ...(filters.genre && {
         genre: {
@@ -26,7 +27,7 @@ exports.searchBook = async (req, res) => {
       },
     })
       .populate("genre", "name")
-      .populate("owner", "fullName");
+      // .populate("owner", "fullName");
 
     res.status(200).json(books);
   } catch (error) {

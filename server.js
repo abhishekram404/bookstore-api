@@ -7,6 +7,7 @@ const genreRoutes = require("./routes/genreRoutes");
 const exchangeRoutes = require("./routes/exchangeRoutes");
 const postRoutes = require("./routes/postRoutes");
 const categoriesRoutes = require("./routes/categoriesRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const dotenv = require("dotenv");
 const path = require("path");
 
@@ -26,6 +27,7 @@ app.use("/genre", identifyUser, genreRoutes);
 app.use("/exchange", identifyUser, exchangeRoutes);
 app.use("/blog", identifyUser, postRoutes);
 app.use("/category", identifyUser, categoriesRoutes);
+app.use("/order", identifyUser, orderRoutes);
 
 
 app.listen(port, (err) => {
