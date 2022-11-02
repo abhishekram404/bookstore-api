@@ -12,6 +12,7 @@ const { identifyUser } = require("../middlewares/identifyUser");
 const { addBuyBook } = require("../controllers/book/addBuyBook");
 const { getBuyBook } = require("../controllers/book/getBuyBook");
 const { getAllBuyBooks } = require("../controllers/book/getAllBuyBooks");
+const { rateBook } = require("../controllers/book/rateBook");
 const upload = multer({ dest: "uploads/", storage });
 
 const router = require("express").Router();
@@ -29,9 +30,8 @@ router.get("/mine", checkAuth, getMyBooks);
 router.get("/exchanged", checkAuth, getExchangedBooks);
 router.post("/new", checkAuth, upload.single("cover"), addBook);
 router.post("/newBuy", checkAuth, upload.single("cover"), addBuyBook);
+router.post("/rate-book", checkAuth, rateBook);
 router.get("/:bookId", identifyUser, getBook);
 router.get("/buy/:bookId", identifyUser, getBuyBook);
-
-
 
 module.exports = router;
