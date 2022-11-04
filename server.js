@@ -1,5 +1,9 @@
 const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const app = express();
+const httpServer = createServer(app);
+
 const port = process.env.PORT || 4000;
 const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -13,8 +17,15 @@ const path = require("path");
 
 const cors = require("cors");
 const { identifyUser } = require("./middlewares/identifyUser");
+const registerSocketHandlers = require("./utils/registerSocketHandlers");
 app.use(cors());
 app.use(express.json());
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
 
 dotenv.config();
 require("./db");
@@ -29,8 +40,11 @@ app.use("/blog", identifyUser, postRoutes);
 app.use("/category", identifyUser, categoriesRoutes);
 app.use("/order", identifyUser, orderRoutes);
 
+io.on("connection", (socket) => {
+  registerSocketHandlers({ io, socket });
+});
 
-app.listen(port, (err) => {
+httpServer.listen(port, (err) => {
   if (err) throw err;
   console.log("Server started on port ", port);
 });
