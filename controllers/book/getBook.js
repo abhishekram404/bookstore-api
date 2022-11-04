@@ -1,6 +1,6 @@
 const errorHandler = require("../../utils/errorHandler");
 const Book = require("../../models/Book");
-
+const { Types } = require("mongoose");
 exports.getBook = async (req, res) => {
   try {
     const id = req.params.bookId;
@@ -14,32 +14,87 @@ exports.getBook = async (req, res) => {
       });
     }
 
-    const book = await Book.findById(id)
-      .populate("owner", "fullName")
-      .populate("genre", "name")
-      .populate("wishlistUsers")
-      .populate("rating")
-      .lean();
+    let bookAggregation = await Book.aggregate([
+      {
+        $match: {
+          _id: new Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "ratings",
+          localField: "_id",
+          foreignField: "bookId",
+          as: "bookRatings",
+        },
+      },
+      {
+        $addFields: {
+          rating: { $avg: "$bookRatings.rating" },
+          isRatedByMe: {
+            $in: [new Types.ObjectId(req?.user?._id), "$bookRatings.userId"],
+          },
+          myRating: {
+            $arrayElemAt: [
+              "$bookRatings.rating",
+              {
+                $indexOfArray: [
+                  "$bookRatings.userId",
+                  new Types.ObjectId(req?.user?._id),
+                ],
+              },
+            ],
+          },
+          ratingsCount: { $size: "$bookRatings" },
+          isHeldByMe: {
+            $eq: [new Types.ObjectId(req?.user?._id), "$heldBy"],
+          },
+          isOwnedByMe: {
+            $eq: [new Types.ObjectId(req?.user?._id), "$owner"],
+          },
+        },
+      },
+      {
+        $unset: ["bookRatings"],
+      },
+    ]);
 
-    if (!book) {
+    if (!bookAggregation || bookAggregation.length === 0) {
       return res.status(404).send({
         success: false,
-        message: "The requested book was not found.",
+        message: "Book not found",
         data: null,
       });
     }
 
+    // const book = await Book.findById(id)
+    //   .populate("owner", "fullName")
+    //   .populate("genre", "name")
+    //   .populate("wishlistUsers")
+    //   .populate("rating")
+    //   .lean();
+
+    let book = await Book.populate(bookAggregation[0], {
+      path: "owner",
+      select: "fullName",
+    });
+    book = await Book.populate(book, {
+      path: "genre",
+      select: "name",
+    });
+
     return res.status(200).send({
       success: true,
       message: "Book details fetched successfully.",
-      data: {
-        ...book,
-        isHeldByMe:
-          book?.heldBy && req?.user?._id
-            ? book.heldBy.toString() === req.user._id.toString()
-            : false,
-        isMine: book?.owner?._id?.toString() === req?.user?._id,
-      },
+      data: book,
+      // {
+      //   ...book,
+      //   isHeldByMe:
+      //     book?.heldBy && req?.user?._id
+      //       ? book.heldBy.toString() === req.user._id.toString()
+      //       : false,
+      //   isMine: book?.owner?._id?.toString() === req?.user?._id,
+      // },
     });
   } catch (error) {
     errorHandler({ error, res });
