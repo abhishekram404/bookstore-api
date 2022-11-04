@@ -32,7 +32,7 @@ exports.rateBook = async (req, res) => {
       });
     }
 
-    const bookRating = await Rating.findOne({ book: bookId, user: userId });
+    const bookRating = await Rating.findOne({ bookId, userId });
     if (bookRating) {
       bookRating.rating = rating;
       await bookRating.save();
