@@ -13,6 +13,7 @@ const { addBuyBook } = require("../controllers/book/addBuyBook");
 const { getBuyBook } = require("../controllers/book/getBuyBook");
 const { getAllBuyBooks } = require("../controllers/book/getAllBuyBooks");
 const { rateBook } = require("../controllers/book/rateBook");
+const { addToWishlist } = require("../controllers/book/addToWishlist");
 const upload = multer({ dest: "uploads/", storage });
 
 const router = require("express").Router();
@@ -25,7 +26,7 @@ router.patch("/release", checkAuth, releaseBook);
 router.post("/search", searchBook);
 router.get("/buy/all", getAllBuyBooks);
 router.get("/all", getAllBooks);
-
+router.post("/add-to-wishlist", checkAuth, addToWishlist);
 router.get("/mine", checkAuth, getMyBooks);
 router.get("/exchanged", checkAuth, getExchangedBooks);
 router.post("/new", checkAuth, upload.single("cover"), addBook);
