@@ -29,6 +29,14 @@ exports.getBook = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "wishlists",
+          localField: "_id",
+          foreignField: "bookId",
+          as: "wishlists",
+        },
+      },
+      {
         $addFields: {
           rating: { $avg: "$bookRatings.rating" },
           isRatedByMe: {
@@ -51,6 +59,9 @@ exports.getBook = async (req, res) => {
           },
           isOwnedByMe: {
             $eq: [new Types.ObjectId(req?.user?._id), "$owner"],
+          },
+          isWishlistedByMe: {
+            $in: [new Types.ObjectId(req?.user?._id), "$wishlists.userId"],
           },
         },
       },
